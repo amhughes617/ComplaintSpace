@@ -1,11 +1,9 @@
-package com.example;
+package com.theironyard.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,7 +25,8 @@ public class Complaint {
     public Complaint() {
     }
 
-    public Complaint(String title, Category category, User user, String text) {
+    public Complaint(UUID id, String title, Category category, User user, String text) {
+        this.id = id;
         this.category = category;
         this.user = user;
         this.text = text;

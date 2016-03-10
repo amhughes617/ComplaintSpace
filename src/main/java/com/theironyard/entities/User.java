@@ -1,4 +1,4 @@
-package com.example;
+package com.theironyard.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,7 +20,8 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password) {
+    public User(UUID id, String userName, String password) {
+        this.id = id;
         this.userName = userName;
         this.password = password;
     }

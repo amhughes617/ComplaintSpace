@@ -1,5 +1,18 @@
 <html>
 <body>
+{{^user}}
+<form action="/login" method="post">
+<input type="text" placeholder="Username" name="userName">
+<input type="password" placeholder="Password" name="password">
+<button type="submit">Login</button>
+</form>
+{{/user}}
 
+{{#user}}
+Welcome, {{userName}}
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+{{/user}}
 </body>
 </html>

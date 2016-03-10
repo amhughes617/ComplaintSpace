@@ -1,5 +1,6 @@
-package com.example;
+package com.theironyard.services;
 
+import com.theironyard.entities.Comment;
 import org.springframework.data.repository.CrudRepository;
 
 /**

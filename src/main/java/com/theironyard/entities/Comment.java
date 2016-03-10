@@ -1,4 +1,4 @@
-package com.example;
+package com.theironyard.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
