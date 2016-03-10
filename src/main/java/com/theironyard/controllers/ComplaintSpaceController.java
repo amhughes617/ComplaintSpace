@@ -1,5 +1,8 @@
 package com.theironyard.controllers;
 
+import com.theironyard.entities.Category;
+import com.theironyard.entities.Comment;
+import com.theironyard.entities.Complaint;
 import com.theironyard.entities.User;
 import com.theironyard.services.CategoryRepository;
 import com.theironyard.services.CommentRepository;
@@ -31,11 +34,42 @@ public class ComplaintSpaceController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String home(Model model, HttpSession session) {
-        User user = users.findByUserName((String)session.getAttribute("userName"));
+        User user = getUserFromSession(session);
         if (user != null) {
             model.addAttribute("user", user);
         }
         return "home";
+    }
+
+    @RequestMapping(path = "/add-complaint", method = RequestMethod.POST)
+    public String add(HttpSession session, String text, String category) {
+        User user = getUserFromSession(session);
+        Category cat = categories.findByCategory(category);
+        if (cat == null) cat = categories.save(new Category(UUID.randomUUID(), category));
+        Complaint complaint = new Complaint(UUID.randomUUID(), cat, user, text);
+        complaints.save(complaint);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/edit-complaint", method = RequestMethod.POST)
+    public String editComplaint(UUID id, String text) {
+        complaints.findById(id).setText(text);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "delete-complaint", method = RequestMethod.POST)
+    public String deleteComplaint(UUID id) {
+        complaints.delete(complaints.findById(id));
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/add-comment", method = RequestMethod.POST)
+    public String add(HttpSession session, String text, UUID complaintId) {
+        User user = getUserFromSession(session);
+        Complaint complaint = complaints.findById(complaintId);
+        Comment comment = new Comment(UUID.randomUUID(),text, complaint, user);
+        comments.save(comment);
+        return "redirect:/";
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
@@ -49,11 +83,16 @@ public class ComplaintSpaceController {
             throw new Exception("Invalid username/password");
         }
         session.setAttribute("userName", userName);
-        return"redirect:/";
+        return "redirect:/";
     }
+
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
+    }
+
+    public User getUserFromSession(HttpSession session) {
+        return users.findByUserName((String)session.getAttribute("userName"));
     }
 }

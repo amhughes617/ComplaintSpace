@@ -18,19 +18,16 @@ public class Complaint {
     @ManyToOne
     private User user;
     @NotNull
-    private String title;
-    @NotNull
     private String text;
 
     public Complaint() {
     }
 
-    public Complaint(UUID id, String title, Category category, User user, String text) {
+    public Complaint(UUID id, Category category, User user, String text) {
         this.id = id;
         this.category = category;
         this.user = user;
         this.text = text;
-        this.title = title;
     }
 
     public UUID getId() {
@@ -59,13 +56,5 @@ public class Complaint {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
