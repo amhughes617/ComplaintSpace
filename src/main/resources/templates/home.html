@@ -10,6 +10,12 @@ Welcome, {{userName}}
 <button type="submit">Login</button>
 </form>
 {{/user}}
+<a href="/">All</a>
+<a href="/?category=Eating Out">Eating Out</a>
+<a href="/?category=Relationship">Relationship</a>
+<a href="/?category=Driving">Driving</a>
+<a href="/?category=Generic Whining">Generic Whining</a>
+
 {{#complaints}}
 <form action="/delete-complaint" method="post">
     <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}

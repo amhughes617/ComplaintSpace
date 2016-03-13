@@ -33,9 +33,16 @@ public class ComplaintSpaceController {
     CommentRepository comments;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public String home(Model model, HttpSession session) {
+    public String home(Model model, HttpSession session, String category) {
         User user = getUserFromSession(session);
-        List<Complaint> complaintList = (List) complaints.findAll();
+        Category cat = categories.findByCategory(category);
+        List<Complaint> complaintList;
+        if (category != null) {
+            complaintList = complaints.findByCategory(cat);
+        }
+        else {
+            complaintList = (List) complaints.findAll();
+        }
         if (user != null) {
             for (Complaint complaint : complaintList) {
                 if (user.getUserName().equals(complaint.getUser().getUserName())) {
