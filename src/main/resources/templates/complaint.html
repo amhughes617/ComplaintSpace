@@ -2,11 +2,13 @@
 <body>
 {{complaint.text}} by {{complaint.user.userName}}
 <br>
+{{#user}}
 <form action="/add-comment" method="post">
     <input type="text" placeholder="Enter comment" name="text">
     <input type="hidden" value="{{complaint.id}}" name="id">
     <button type="submit">Submit</button>
 </form>
+{{/user}}
 {{#comments}}
 <form action="/delete-comment" method="post">
     {{text}} {{^isAuthor}}by {{user.userName}}{{/isAuthor}}

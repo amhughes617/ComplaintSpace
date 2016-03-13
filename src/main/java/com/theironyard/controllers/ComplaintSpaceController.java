@@ -35,16 +35,16 @@ public class ComplaintSpaceController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String home(Model model, HttpSession session) {
         User user = getUserFromSession(session);
+        List<Complaint> complaintList = (List) complaints.findAll();
         if (user != null) {
-            List<Complaint> complaintList = (List) complaints.findAll();
             for (Complaint complaint : complaintList) {
                 if (user.getUserName().equals(complaint.getUser().getUserName())) {
                     complaint.setAuthor(true);
                 }
             }
-            model.addAttribute("complaints", complaintList);
             model.addAttribute("user", user);
         }
+        model.addAttribute("complaints", complaintList);
         return "home";
     }
     @RequestMapping(path = "/view-complaint", method = RequestMethod.GET)
@@ -52,15 +52,16 @@ public class ComplaintSpaceController {
         User user = getUserFromSession(session);
         Complaint complaint = complaints.findOne(id);
         List<Comment> commentList = comments.findByComplaint(complaint);
-        for (Comment comment : commentList) {
-            if (user.getUserName().equals(comment.getUser().getUserName())) {
-                comment.setAuthor(true);
+        if (user != null) {
+            for (Comment comment : commentList) {
+                if (user.getUserName().equals(comment.getUser().getUserName())) {
+                    comment.setAuthor(true);
+                }
             }
+            model.addAttribute("user", user);
         }
-        System.out.println();
         model.addAttribute("comments", commentList);
         model.addAttribute("complaint", complaint);
-        model.addAttribute("user", user);
         return "complaint";
     }
     @RequestMapping(path = "edit", method = RequestMethod.GET)

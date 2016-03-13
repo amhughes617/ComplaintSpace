@@ -1,5 +1,8 @@
 <html>
 <body>
+{{#user}}
+Welcome, {{userName}}
+{{/user}}
 {{^user}}
 <form action="/login" method="post">
 <input type="text" placeholder="Username" name="userName">
@@ -7,9 +10,17 @@
 <button type="submit">Login</button>
 </form>
 {{/user}}
-
+{{#complaints}}
+<form action="/delete-complaint" method="post">
+    <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}
+    {{#isAuthor}}
+    <a href="/edit?complaintId={{id}}">Edit</a>
+    <input type="hidden" value="{{id}}" name="id">
+    <button type="submit">Delete</button>
+    {{/isAuthor}}
+</form>
+{{/complaints}}
 {{#user}}
-Welcome, {{userName}}
 <br><br>
 
 <form action="/add-complaint"method="post">
@@ -23,17 +34,6 @@ Welcome, {{userName}}
     <input type="text" placeholder="Complaint" name="text">
     <button type="submit">Submit</button>
 </form>
-{{#complaints}}
-<form action="/delete-complaint" method="post">
-    <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}
-    {{#isAuthor}}
-    <a href="/edit?complaintId={{id}}">Edit</a>
-    <input type="hidden" value="{{id}}" name="id">
-    <button type="submit">Delete</button>
-    {{/isAuthor}}
-</form>
-{{/complaints}}
-
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>
