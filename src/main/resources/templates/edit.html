@@ -1,14 +1,16 @@
 <html>
 <body>
 {{#complaint}}
-<form action="edit-complaint" method="post">
-    <input type="text" value="{{text}}" name="text">
+<form action="/edit-complaint" method="post">
+    <input type="text" placeholder="{{text}}" name="text">
+    <input type="hidden" value="{{id}}" name="id">
     <button type="submit">Edit</button>
 </form>
 {{/complaint}}
 {{#comment}}
-<form action="edit-comment" method="post">
-    <input type="text" value="{{text}}" name="text">
+<form action="/edit-comment" method="post">
+    <input type="text" placeholder="{{text}}" name="text">
+    <input type="hidden" value="{{id}}" name="id">
     <button type="submit">Edit</button>
 </form>
 {{/comment}}

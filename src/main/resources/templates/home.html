@@ -25,7 +25,7 @@ Welcome, {{userName}}
 </form>
 {{#complaints}}
 <form action="/delete-complaint" method="post">
-    <a href="/view-complaint?id={{id}}">{{text}}</a> by {{user.userName}}
+    <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}
     {{#isAuthor}}
     <a href="/edit?complaintId={{id}}">Edit</a>
     <input type="hidden" value="{{id}}" name="id">

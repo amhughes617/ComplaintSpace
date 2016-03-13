@@ -57,15 +57,20 @@ public class ComplaintSpaceController {
                 comment.setAuthor(true);
             }
         }
-        model.addAttribute("comments", comments);
+        System.out.println();
+        model.addAttribute("comments", commentList);
         model.addAttribute("complaint", complaint);
         model.addAttribute("user", user);
         return "complaint";
     }
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Model model, Integer complaintId, Integer commentId) {
-        model.addAttribute("complaint", complaints.findOne(complaintId));
-        model.addAttribute("comment", comments.findOne(commentId));
+        if (complaintId != null) {
+            model.addAttribute("complaint", complaints.findOne(complaintId));
+        }
+        else if (commentId != null) {
+            model.addAttribute("comment", comments.findOne(commentId));
+        }
         return "edit";
     }
 
@@ -81,7 +86,9 @@ public class ComplaintSpaceController {
 
     @RequestMapping(path = "/edit-complaint", method = RequestMethod.POST)
     public String editComplaint(Integer id, String text) {
-        complaints.findOne(id).setText(text);
+        Complaint complaint = complaints.findOne(id);
+        if (!text.isEmpty()) complaint.setText(text);
+        complaints.save(complaint);
         return "redirect:/";
     }
 
@@ -92,17 +99,19 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "/add-comment", method = RequestMethod.POST)
-    public String add(HttpSession session, String text, Integer complaintId) {
+    public String add(HttpSession session, String text, Integer id) {
         User user = getUserFromSession(session);
-        Complaint complaint = complaints.findOne(complaintId);
+        Complaint complaint = complaints.findOne(id);
         Comment comment = new Comment(text, complaint, user);
         comments.save(comment);
         return "redirect:/";
     }
 
-    @RequestMapping(path = "/edit-commment", method = RequestMethod.POST)
+    @RequestMapping(path = "/edit-comment", method = RequestMethod.POST)
     public String editComment(Integer id, String text) {
-        comments.findOne(id).setText(text);
+        Comment comment = comments.findOne(id);
+        if (!text.isEmpty()) comment.setText(text);
+        comments.save(comment);
         return "redirect:/";
     }
 
