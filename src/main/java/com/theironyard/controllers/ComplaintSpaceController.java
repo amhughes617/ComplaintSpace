@@ -100,6 +100,7 @@ public class ComplaintSpaceController {
         User user = getUserFromSession(session);
         if (user ==null) throw new Exception("not logged in");
         Complaint complaint = complaints.findOne(id);
+        if (!user.getUserName().equals(complaint.getUser().getUserName())) throw new Exception("this complaint does not belong to you");
         if (!text.isEmpty()) complaint.setText(text);
         complaints.save(complaint);
         return "redirect:/";
@@ -109,7 +110,9 @@ public class ComplaintSpaceController {
     public String deleteComplaint(Integer id, HttpSession session) throws Exception {
         User user = getUserFromSession(session);
         if (user ==null) throw new Exception("not logged in");
-        complaints.delete(complaints.findOne(id));
+        Complaint complaint = complaints.findOne(id);
+        if (!user.getUserName().equals(complaint.getUser().getUserName())) throw new Exception("this complaint does not belong to you");
+        complaints.delete(complaint);
         return "redirect:/";
     }
 
@@ -127,6 +130,7 @@ public class ComplaintSpaceController {
         User user = getUserFromSession(session);
         if (user ==null) throw new Exception("not logged in");
         Comment comment = comments.findOne(id);
+        if (!user.getUserName().equals(comment.getUser().getUserName())) throw new Exception("this comment does not belong to you");
         if (!text.isEmpty()) comment.setText(text);
         comments.save(comment);
         return "redirect:/";
@@ -136,7 +140,9 @@ public class ComplaintSpaceController {
     public String deleteComment(Integer id, HttpSession session) throws Exception {
         User user = getUserFromSession(session);
         if (user ==null) throw new Exception("not logged in");
-        comments.delete(comments.findOne(id));
+        Comment comment = comments.findOne(id);
+        if (!user.getUserName().equals(comment.getUser().getUserName())) throw new Exception("this comment does not belong to you");
+        comments.delete(comment);
         return "redirect:/";
     }
 
