@@ -1,10 +1,8 @@
 package com.theironyard.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 /**
  * Created by alexanderhughes on 3/10/16.
@@ -12,25 +10,35 @@ import java.util.UUID;
 @Entity
 public class Complaint {
     @Id
-    UUID id;
+    @GeneratedValue
+    private int id;
     @ManyToOne
     private Category category;
     @ManyToOne
     private User user;
     @NotNull
     private String text;
+    @Transient
+    private boolean isAuthor;
 
     public Complaint() {
     }
 
-    public Complaint(UUID id, Category category, User user, String text) {
-        this.id = id;
+    public Complaint(Category category, User user, String text) {
         this.category = category;
         this.user = user;
         this.text = text;
     }
 
-    public UUID getId() {
+    public boolean isAuthor() {
+        return isAuthor;
+    }
+
+    public void setAuthor(boolean author) {
+        isAuthor = author;
+    }
+
+    public int getId() {
         return id;
     }
 

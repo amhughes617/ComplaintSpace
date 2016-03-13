@@ -1,6 +1,7 @@
 package com.theironyard.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -11,15 +12,15 @@ import java.util.UUID;
 @Entity
 public class Category {
     @Id
-    private UUID id;
+    @GeneratedValue
+    private int id;
     @NotNull
     private String category;
 
     public Category() {
     }
 
-    public Category(UUID id, String category) {
-        this.id = id;
+    public Category(String category) {
         this.category = category;
     }
 

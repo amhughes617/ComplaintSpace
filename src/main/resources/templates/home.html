@@ -10,6 +10,30 @@
 
 {{#user}}
 Welcome, {{userName}}
+<br><br>
+
+<form action="/add-complaint"method="post">
+    <select name="category">
+        <option selected disabled>Category</option>
+        <option value="Eating Out">Eating Out</option>
+        <option value="Relationship">Relationship</option>
+        <option value="Driving">Driving</option>
+        <option value="Generic Whining">Generic Whining</option>
+    </select>
+    <input type="text" placeholder="Complaint" name="text">
+    <button type="submit">Submit</button>
+</form>
+{{#complaints}}
+<form action="/delete-complaint" method="post">
+    <a href="/view-complaint?id={{id}}">{{text}}</a> by {{user.userName}}
+    {{#isAuthor}}
+    <a href="/edit?complaintId={{id}}">Edit</a>
+    <input type="hidden" value="{{id}}" name="id">
+    <button type="submit">Delete</button>
+    {{/isAuthor}}
+</form>
+{{/complaints}}
+
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>

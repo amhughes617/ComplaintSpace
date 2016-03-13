@@ -1,0 +1,19 @@
+<html>
+<body>
+{{complaint.text}}
+{{#comments}}
+<ul>
+    <li>
+<form action="/delete-comment" method="post">
+    {{text}} {{^isAuthor}}by {{user.userName}}{{/isAuthor}}
+    {{#isAuthor}}
+    <a href="/edit?commentId={{id}}">Edit</a>
+    <input type="hidden" value="{{id}}" name="id">
+    <button type="submit">Delete</button>
+    {{/isAuthor}}
+</form>
+    </li>
+</ul>
+{{/comments}}
+</body>
+</html>

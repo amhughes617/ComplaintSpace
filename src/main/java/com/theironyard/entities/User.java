@@ -1,5 +1,7 @@
 package com.theironyard.entities;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -11,7 +13,8 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id
-    UUID id;
+    @GeneratedValue
+    private int id;
     @NotNull
     private String userName;
     @NotNull
@@ -20,8 +23,7 @@ public class User {
     public User() {
     }
 
-    public User(UUID id, String userName, String password) {
-        this.id = id;
+    public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
