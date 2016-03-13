@@ -65,7 +65,9 @@ public class ComplaintSpaceController {
         return "complaint";
     }
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Model model, Integer complaintId, Integer commentId) {
+    public String edit(Model model, Integer complaintId, Integer commentId, HttpSession session) throws Exception {
+        User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         if (complaintId != null) {
             model.addAttribute("complaint", complaints.findOne(complaintId));
         }
@@ -76,8 +78,9 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "/add-complaint", method = RequestMethod.POST)
-    public String add(HttpSession session, String text, String category) {
+    public String add(HttpSession session, String text, String category) throws Exception {
         User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         Category cat = categories.findByCategory(category);
         if (cat == null) cat = categories.save(new Category(category));
         Complaint complaint = new Complaint(cat, user, text);
@@ -86,7 +89,9 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "/edit-complaint", method = RequestMethod.POST)
-    public String editComplaint(Integer id, String text) {
+    public String editComplaint(Integer id, String text, HttpSession session) throws Exception {
+        User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         Complaint complaint = complaints.findOne(id);
         if (!text.isEmpty()) complaint.setText(text);
         complaints.save(complaint);
@@ -94,13 +99,15 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "delete-complaint", method = RequestMethod.POST)
-    public String deleteComplaint(Integer id) {
+    public String deleteComplaint(Integer id, HttpSession session) throws Exception {
+        User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         complaints.delete(complaints.findOne(id));
         return "redirect:/";
     }
 
     @RequestMapping(path = "/add-comment", method = RequestMethod.POST)
-    public String add(HttpSession session, String text, Integer id) {
+    public String add(HttpSession session, String text, Integer id) throws Exception {
         User user = getUserFromSession(session);
         Complaint complaint = complaints.findOne(id);
         Comment comment = new Comment(text, complaint, user);
@@ -109,7 +116,9 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "/edit-comment", method = RequestMethod.POST)
-    public String editComment(Integer id, String text) {
+    public String editComment(Integer id, String text, HttpSession session) throws Exception {
+        User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         Comment comment = comments.findOne(id);
         if (!text.isEmpty()) comment.setText(text);
         comments.save(comment);
@@ -117,7 +126,9 @@ public class ComplaintSpaceController {
     }
 
     @RequestMapping(path = "delete-comment", method = RequestMethod.POST)
-    public String deleteComment(Integer id) {
+    public String deleteComment(Integer id, HttpSession session) throws Exception {
+        User user = getUserFromSession(session);
+        if (user ==null) throw new Exception("not logged in");
         comments.delete(comments.findOne(id));
         return "redirect:/";
     }
