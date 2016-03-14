@@ -10,6 +10,8 @@ import com.theironyard.services.ComplaintRepository;
 import com.theironyard.services.UserRepository;
 import com.theironyard.utils.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,25 +35,43 @@ public class ComplaintSpaceController {
     CommentRepository comments;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public String home(Model model, HttpSession session, String category) {
+    public String home(Model model, HttpSession session, String category, Integer page) {
         User user = getUserFromSession(session);
+        page = (page == null) ? 0 : page;
+        Page<Complaint> p;
+        PageRequest pr = new PageRequest(page, 5);
         Category cat = categories.findByCategory(category);
-        List<Complaint> complaintList;
         if (category != null) {
-            complaintList = complaints.findByCategory(cat);
+            p = complaints.findByCategory(pr, cat);
+            if (user != null) {
+                for (Complaint complaint : p) {
+                    if (user.getUserName().equals(complaint.getUser().getUserName())) {
+                        complaint.setAuthor(true);
+                    }
+                }
+                model.addAttribute("user", user);
+            }
+            model.addAttribute("complaints", p);
         }
         else {
-            complaintList = (List) complaints.findAll();
-        }
-        if (user != null) {
-            for (Complaint complaint : complaintList) {
-                if (user.getUserName().equals(complaint.getUser().getUserName())) {
-                    complaint.setAuthor(true);
+            p = complaints.findAll(pr);
+            if (user != null) {
+                for (Complaint complaint : p) {
+                    if (user.getUserName().equals(complaint.getUser().getUserName())) {
+                        complaint.setAuthor(true);
+                    }
                 }
+                model.addAttribute("user", user);
             }
-            model.addAttribute("user", user);
+            model.addAttribute("complaints", p);
+
         }
-        model.addAttribute("complaints", complaintList);
+        model.addAttribute("nextPage", page+1);
+        model.addAttribute("showNext", p.hasNext());
+        model.addAttribute("showPrevious", p.hasPrevious());
+        model.addAttribute("previousPage", page-1);
+        model.addAttribute("category", category);
+
         return "home";
     }
     @RequestMapping(path = "/view-complaint", method = RequestMethod.GET)
@@ -100,7 +120,9 @@ public class ComplaintSpaceController {
         User user = getUserFromSession(session);
         if (user ==null) throw new Exception("not logged in");
         Complaint complaint = complaints.findOne(id);
-        if (!user.getUserName().equals(complaint.getUser().getUserName())) throw new Exception("this complaint does not belong to you");
+        if (!user.getUserName().equals(complaint.getUser().getUserName())) {
+            throw new Exception("this complaint does not belong to you");
+        }
         if (!text.isEmpty()) complaint.setText(text);
         complaints.save(complaint);
         return "redirect:/";
@@ -109,7 +131,7 @@ public class ComplaintSpaceController {
     @RequestMapping(path = "delete-complaint", method = RequestMethod.POST)
     public String deleteComplaint(Integer id, HttpSession session) throws Exception {
         User user = getUserFromSession(session);
-        if (user ==null) throw new Exception("not logged in");
+        if (user == null) throw new Exception("not logged in");
         Complaint complaint = complaints.findOne(id);
         if (!user.getUserName().equals(complaint.getUser().getUserName())) throw new Exception("this complaint does not belong to you");
         complaints.delete(complaint);
@@ -139,7 +161,7 @@ public class ComplaintSpaceController {
     @RequestMapping(path = "delete-comment", method = RequestMethod.POST)
     public String deleteComment(Integer id, HttpSession session) throws Exception {
         User user = getUserFromSession(session);
-        if (user ==null) throw new Exception("not logged in");
+        if (user == null) throw new Exception("not logged in");
         Comment comment = comments.findOne(id);
         if (!user.getUserName().equals(comment.getUser().getUserName())) throw new Exception("this comment does not belong to you");
         comments.delete(comment);

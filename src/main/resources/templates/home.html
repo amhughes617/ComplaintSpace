@@ -16,16 +16,6 @@ Welcome, {{userName}}
 <a href="/?category=Driving">Driving</a>
 <a href="/?category=Generic Whining">Generic Whining</a>
 
-{{#complaints}}
-<form action="/delete-complaint" method="post">
-    <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}
-    {{#isAuthor}}
-    <a href="/edit?complaintId={{id}}">Edit</a>
-    <input type="hidden" value="{{id}}" name="id">
-    <button type="submit">Delete</button>
-    {{/isAuthor}}
-</form>
-{{/complaints}}
 {{#user}}
 <br><br>
 
@@ -40,6 +30,25 @@ Welcome, {{userName}}
     <input type="text" placeholder="Complaint" name="text">
     <button type="submit">Submit</button>
 </form>
+{{/user}}
+{{#complaints}}
+<form action="/delete-complaint" method="post">
+    <a href="/view-complaint?id={{id}}">{{text}}</a>{{^isAuthor}} by {{user.userName}}{{/isAuthor}}
+    {{#isAuthor}}
+    <a href="/edit?complaintId={{id}}">Edit</a>
+    <input type="hidden" value="{{id}}" name="id">
+    <button type="submit">Delete</button>
+    {{/isAuthor}}
+</form>
+{{/complaints}}
+{{#showPrevious}}
+<a href="/?page={{previousPage}}">Previous</a>
+{{/showPrevious}}
+
+{{#showNext}}
+<a href="/?page={{nextPage}}{{#category}}&category={{.}}{{/category}}">Next</a>
+{{/showNext}}
+{{#user}}
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>
